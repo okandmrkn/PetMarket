@@ -1,1 +1,11 @@
-<Solution />
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Customer/">
+    <Project Path="Customer.Application/Customer.Application.csproj" />
+    <Project Path="Customer.Domain/Customer.Domain.csproj" />
+    <Project Path="Customer.Infrastructure/Customer.Infrastructure.csproj" Id="2b144d13-ad5d-409e-984d-2e775c7c8cd4" />
+    <Project Path="Customer.Persistence/Customer.Persistence.csproj" />
+    <Project Path="Customer.WebAPI/Customer.WebAPI.csproj" Id="4a9de03e-9aa6-4834-a792-c23ce5348097" />
+  </Folder>
+  <Project Path="Customer.Domain.Tests/Customer.Domain.Tests.csproj" Id="7c3b43e4-297a-4499-be49-f916b7f458cd" />
+</Solution>
