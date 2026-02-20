@@ -18,15 +18,15 @@ namespace Customer.Application.Services
             _passwordHasher = passwordHasher;
         }
 
-        public BaseResponse<bool> Register(CreateCustomerRequest request)
+        public async Task<BaseResponse<bool>> Register(CreateCustomerRequest request)
         {
-            var exist = _customerRepository.CheckIfEmailExist(request.Email);
+            var exist = await _customerRepository.CheckIfEmailExistAsync(request.Email);
             if (exist)
             {
                 return BaseResponse<bool>.Failure("Email already exist");
             }
 
-            string hashedPassword = _passwordHasher.Hash(request.Password);
+            string hashedPassword = await _passwordHasher.HashAsync(request.Password);
 
             try
             {
@@ -39,7 +39,7 @@ namespace Customer.Application.Services
                         hashedPassword
                     );
 
-                _customerRepository.AddCustomer(newCustomer);
+                await _customerRepository.AddCustomerAsync(newCustomer);
 
                 return BaseResponse<bool>.Success(true, "Customer Registered Successfully");
             }
@@ -48,15 +48,15 @@ namespace Customer.Application.Services
                 return BaseResponse<bool>.Failure(ex.Message);
             }
         }
-        public BaseResponse<bool> Login(LoginRequest request)
+        public async Task<BaseResponse<bool>> Login(LoginRequest request)
         {
-            var user = _customerRepository.GetCustomer(request.Email);
+            var user = await _customerRepository.GetCustomerAsync(request.Email);
             if (user == null)
                 return BaseResponse<bool>.Failure("User not found.");
 
             else
             {
-                bool verifyPassword = _passwordHasher.CheckPassword(request.Password, user.Password);
+                bool verifyPassword = await _passwordHasher.CheckPasswordAsync(request.Password, user.Password);
 
                 if (verifyPassword)
                     return BaseResponse<bool>.Success(true, "Customer Logged In Successfully");
@@ -66,10 +66,10 @@ namespace Customer.Application.Services
             }
         }
 
-        public BaseResponse<bool> Update(UpdateCustomerRequest request)
+        public async Task<BaseResponse<bool>> Update(UpdateCustomerRequest request)
         {
 
-            var existingCustomer = _customerRepository.GetById(request.Id);
+            var existingCustomer = await _customerRepository.GetByIdAsync(request.Id);
 
             if (existingCustomer == null)
                 return BaseResponse<bool>.Failure("Customer Not Found");
@@ -77,7 +77,7 @@ namespace Customer.Application.Services
 
             if (existingCustomer.Email != request.Email.Trim().ToLower())
             {
-                if (_customerRepository.CheckIfEmailExist(request.Email))
+                if (await _customerRepository.CheckIfEmailExistAsync(request.Email))
                     return BaseResponse<bool>.Failure("Email already in use");
             }
 
@@ -85,7 +85,7 @@ namespace Customer.Application.Services
             string finalPassword = existingCustomer.Password; 
             if (!string.IsNullOrWhiteSpace(request.Password))
             {
-                finalPassword = _passwordHasher.Hash(request.Password);
+                finalPassword = await _passwordHasher.HashAsync(request.Password);
             }
 
             try
@@ -100,7 +100,7 @@ namespace Customer.Application.Services
                     finalPassword
                 );
 
-                _customerRepository.UpdateCustomer(existingCustomer);
+                await _customerRepository.UpdateCustomerAsync(existingCustomer);
 
                 return BaseResponse<bool>.Success(true, "Customer Informations Updated Successfully");
             }
@@ -111,16 +111,16 @@ namespace Customer.Application.Services
         }
 
 
-        public BaseResponse<bool> Delete(uint id)
+        public async Task<BaseResponse<bool>> Delete(uint id)
         {
-            var existingCustomer = _customerRepository.GetById(id);
+            var existingCustomer = await _customerRepository.GetByIdAsync(id);
 
             if (existingCustomer == null)
                 return BaseResponse<bool>.Failure("Customer Not Found");
 
             try
             {
-                _customerRepository.DeleteCustomer(id);
+                await _customerRepository.DeleteCustomerAsync(id);
 
                 return BaseResponse<bool>.Success(true, "Customer Deleted Successfully");
             }

@@ -4,22 +4,17 @@ namespace Customer.Application.Interfaces
 {
     public interface ICustomerRepository
     {
-        void AddCustomer(CustomerDomain customer);
-
-        CustomerDomain? GetCustomer(string email);
-
-        bool CheckIfEmailExist(string email);
-
-        void UpdateCustomer(CustomerDomain customer); 
-
-        void DeleteCustomer(uint id);
-
-        CustomerDomain? GetById(uint id);
-
-        CustomerDomain[]? GetAll(uint id);
-        List<CustomerDomain>? GetAll1(uint id);
-        IEnumerable<CustomerDomain>? GetAll2(uint id);
-        IList<CustomerDomain>? GetAll3(uint id);
+        Task AddCustomerAsync(CustomerDomain customer);
+        Task<CustomerDomain?> GetCustomerAsync(string email);
+        Task<bool> CheckIfEmailExistAsync(string email);
+        Task UpdateCustomerAsync(CustomerDomain customer);
+        Task DeleteCustomerAsync(uint id);
+        Task<CustomerDomain?> GetByIdAsync(uint id);
+        Task<IEnumerable<CustomerDomain>> GetAllAsync();
+        Task<IList<CustomerDomain>?> GetAllAsync1();
+        Task<CustomerDomain[]?> GetAll2Async();
+        Task<List<CustomerDomain>?> GetAllAsync3();
+        
 
     }
 }

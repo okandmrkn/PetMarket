@@ -2,8 +2,8 @@
 {
     public interface IPasswordHasher
     {
-        string Hash(string password);
-        bool CheckPassword(string password, string hashedPassword);
+        Task<string> HashAsync(string password);
+        Task<bool> CheckPasswordAsync(string password, string hashedPassword);
 
     }
 }
