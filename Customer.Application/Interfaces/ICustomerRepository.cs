@@ -5,6 +5,7 @@ namespace Customer.Application.Interfaces
     public interface ICustomerRepository
     {
         Task AddAsync(CustomerInfo customer);
+        Task AddAsyncParallel(CustomerInfo customer);
         Task<bool> ExistsByEmailAsync(string email);
         Task UpdateAsync(CustomerInfo customer);
         Task DeleteAsync(uint id);

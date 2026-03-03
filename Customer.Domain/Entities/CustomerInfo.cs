@@ -46,5 +46,8 @@ namespace Customer.Domain.Entities
 
         public void SetLoginInfo(CustomerLogin login) => LoginInfo = login;
         public void SetBalanceInfo(CustomerBalance balance) => BalanceInfo = balance;
+
+
+
     }
 }

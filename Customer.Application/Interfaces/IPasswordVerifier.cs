@@ -6,6 +6,6 @@ namespace Customer.Application.Interfaces
 {
     public interface IPasswordVerifier
     {
-        Task<bool> CheckPasswordAsync(string password, string hashedPassword);
+        bool CheckPassword(string password, string hashedPassword);
     }
 }

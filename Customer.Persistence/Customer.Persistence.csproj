@@ -24,10 +24,4 @@
     <ProjectReference Include="..\Customer.Domain\Customer.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Context\" />
-    <Folder Include="Configurations\" />
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>

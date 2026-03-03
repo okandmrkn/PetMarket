@@ -2,7 +2,7 @@
 {
     public interface IPasswordHasher
     {
-        Task<string> HashAsync(string password);
+        string Hash(string password);
 
     }
 }

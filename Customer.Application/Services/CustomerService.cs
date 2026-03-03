@@ -35,7 +35,7 @@ namespace Customer.Application.Services
                 if (!string.IsNullOrWhiteSpace(request.Password))
                 {
                     if (request.Password.Length < 8) return BaseResponse<bool>.Failure("Password Too short");
-                    finalPassword = await _passwordHasher.HashAsync(request.Password);
+                    finalPassword = _passwordHasher.Hash(request.Password);
                 }
 
                 existing.UpdateDetails(request.FirstName, request.LastName, request.Age, request.Gender);
@@ -66,7 +66,7 @@ namespace Customer.Application.Services
 
             try
             {
-                string hashedPassword = await _passwordHasher.HashAsync(request.Password);
+                string hashedPassword = _passwordHasher.Hash(request.Password);
 
                 var login = new CustomerLogin(request.Email, hashedPassword);
                 var balance = new CustomerBalance(0);
@@ -75,7 +75,8 @@ namespace Customer.Application.Services
                 customer.SetLoginInfo(login);
                 customer.SetBalanceInfo(balance);
 
-                await _customerRepository.AddAsync(customer);
+                //await _customerRepository.AddAsync(customer);
+                await _customerRepository.AddAsyncParallel(customer);
                 return BaseResponse<bool>.Success(true, "Registered Successfully");
             }
             catch (Exception ex) { return BaseResponse<bool>.Failure(ex.Message); }
@@ -86,7 +87,7 @@ namespace Customer.Application.Services
             var user = await _customerRepository.GetByEmailAsync(request.Email);
             if (user == null) return BaseResponse<bool>.Failure("User not found.");
 
-            bool verify = await _passwordVerifier.CheckPasswordAsync(request.Password, user.LoginInfo.Password);
+            bool verify = _passwordVerifier.CheckPassword(request.Password, user.LoginInfo.Password);
             return verify ? BaseResponse<bool>.Success(true, "Logged In") : BaseResponse<bool>.Failure("Wrong Credentials");
         }
 
