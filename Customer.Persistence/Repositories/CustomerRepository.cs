@@ -32,26 +32,48 @@ namespace Customer.Persistence.Repositories
             await _context.Customers.AddAsync(customer);
             await _context.SaveChangesAsync();
         }
+
+        private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        private static int _sharedValue = 0;
+
         public async Task AddAsyncParallel(CustomerInfo customer)
         {
             var databaseTask = Task.Run(async () =>
             {
-                Debug.WriteLine("DB İşlemi Başladı...");
-                await _context.Customers.AddAsync(customer);
-                await _context.SaveChangesAsync();
-                Debug.WriteLine("DB İşlemi Bitti.");
+                await _semaphore.WaitAsync();
+                try
+                {
+                    Interlocked.Add(ref _sharedValue, 5);
+                    Debug.WriteLine($"DB: Değer +5 artırıldı. Yeni Değer: {_sharedValue}");
+
+                    await _context.Customers.AddAsync(customer);
+                    await _context.SaveChangesAsync();
+                }
+                finally { _semaphore.Release(); }
             });
 
             var dummyLoggerTask = Task.Run(async () =>
             {
-                Debug.WriteLine("dummyLoggerTask Başladı");
-                await Task.Delay(1000);
-                Debug.WriteLine("dummyLoggerTask Bitti.");
+                await _semaphore.WaitAsync();
+                
+                try
+                {
+                    
+                    int initial, computed;
+                    do
+                    {
+                        initial = _sharedValue;
+                        computed = initial * 2;
+                    } while (initial != Interlocked.CompareExchange(ref _sharedValue, computed, initial));
+
+                    Debug.WriteLine($"Logger: Değer *2 yapıldı. Yeni Değer: {_sharedValue}");
+                    await Task.Delay(1000);
+                }
+                finally { _semaphore.Release(); }
             });
 
             await Task.WhenAll(databaseTask, dummyLoggerTask);
-
-            Console.WriteLine("Tüm görevler tamamlandı, kullanıcıya dönülüyor.");
+            Debug.WriteLine($"Final Paylaşılan Değer: {_sharedValue}");
         }
 
         public async Task<bool> ExistsByEmailAsync(string email)

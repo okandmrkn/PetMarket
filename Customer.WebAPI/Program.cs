@@ -22,7 +22,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var cryptService = new BCryptPasswordService();
-// Repository ve Servis Kayıtları
+// Repository ve Servis Kayıtları0.3
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IPasswordHasher>((service) => cryptService);
 builder.Services.AddScoped<IPasswordVerifier>((service) => cryptService);

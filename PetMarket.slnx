@@ -7,5 +7,11 @@
     <Project Path="Customer.Persistence/Customer.Persistence.csproj" />
     <Project Path="Customer.WebAPI/Customer.WebAPI.csproj" Id="4a9de03e-9aa6-4834-a792-c23ce5348097" />
   </Folder>
+  <Folder Name="/src/Product/">
+    <Project Path="Domain/Product.Domain.csproj" Id="f529971b-15bf-4aa7-80a7-163a84a5b7f9" />
+    <Project Path="Product.Application/Product.Application.csproj" Id="4d1e218c-7c86-4968-8d8d-0bf71bd9be2c" />
+    <Project Path="Product.Persistence/Product.Persistence.csproj" Id="f3c8d7f0-9a91-40ae-915e-70cda0d6e6b3" />
+    <Project Path="Product.WebAPI/Product.WebAPI.csproj" Id="cf99564d-ab11-4841-9cf6-f80f6f5e70e1" />
+  </Folder>
   <Project Path="Customer.Domain.Tests/Customer.Domain.Tests.csproj" Id="7c3b43e4-297a-4499-be49-f916b7f458cd" />
 </Solution>
